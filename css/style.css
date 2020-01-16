@@ -38,3 +38,8 @@
   height: auto;
   border-radius: 5px;
 }
+
+.last {
+  border-bottom-left-radius: .25rem;
+  border-bottom-right-radius: .25rem;
+}
