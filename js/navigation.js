@@ -1,5 +1,5 @@
 $.ajaxSetup({
-  cache: false
+  cache: window.location.hostname === 'localhost'
 })
 
 function load(src) {
@@ -19,6 +19,7 @@ function load(src) {
 }
 
 var list = $('#list').find('button')
+$(list.slice(-2)[0]).addClass('last')
 
 list.click(e => {
   if (e.target.dataset.href) {
