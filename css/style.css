@@ -8,14 +8,15 @@
 }
 
 .darkonhover:hover {
-  -webkit-filter:brightness(50%);
-  -moz-filter:brightness(50%);
-  -ms-filter:brightness(50%);
-  -o-filter:brightness(50%);
-  filter:brightness(50%);
+  -webkit-filter: brightness(50%);
+  -moz-filter: brightness(50%);
+  -ms-filter: brightness(50%);
+  -o-filter: brightness(50%);
+  filter: brightness(50%);
 }
 
-.bg-primary, .bg-danger {
+.bg-primary,
+.bg-danger {
   color: #ffffff;
 }
 
@@ -42,4 +43,17 @@
 .last {
   border-bottom-left-radius: .25rem;
   border-bottom-right-radius: .25rem;
+}
+
+.image {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 100%;
+}
+
+.image img {
+  position: absolute;
+  object-fit: cover;
+  height: auto;
+  left: 0;
 }

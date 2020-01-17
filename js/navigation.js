@@ -10,7 +10,7 @@ function load(src) {
       path: src
     }
 
-    if (queryV) s.theme = variant
+    if (t) s.theme = variant
 
     url.search(s)
     window.history.replaceState(null, null, url.toString())
@@ -19,7 +19,6 @@ function load(src) {
 }
 
 var list = $('#list').find('button')
-console.log($(list.slice(-2)[0]).addClass('last'))
 
 list.click(e => {
   if (e.target.dataset.href) {
