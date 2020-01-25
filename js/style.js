@@ -1,13 +1,13 @@
 var t = new URLSearchParams(window.location.search).get('theme');
 if (t !== null) {
-  var variant = t;
+    var variant = t;
 } else {
-  var variant = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'day';
+    var variant = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'night' : 'day';
 }
 
 var style = $('<link rel="stylesheet" href="/css/' + variant + '.css">')
 style.on('load', _ => {
-  $('body').removeAttr('style')
+    $('body').removeAttr('style')
 })
 
 $('head').append(style)
