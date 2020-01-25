@@ -17,7 +17,7 @@ function load(src, clear = true) {
     if (t) s.theme = variant
 
     url.search(s)
-    // window.history.pushState(s, s.path, url.toString())
+    window.history.pushState(s, 'Robot X', url.toString())
     $('#brand').attr('src', '/img/logos/brand-' + variant + '.png')
   })
 }
