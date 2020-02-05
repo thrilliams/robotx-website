@@ -1,0 +1,13 @@
+<div class="jumbotron" align="center">
+    <br><br><br>
+    <br><br>
+    <p class="lead">
+        Loading...
+    </p>
+    <script>window.blogs.then(blogs => {
+        inject('')
+        blogs.forEach((blog, i) => {
+            inject(`<div class="jumbotron">${i === 0 ? '<br><br><br>' : ''}${blog.body}</div>`, false)
+        })
+    })</script>
+</div>
