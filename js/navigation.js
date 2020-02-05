@@ -1,22 +1,27 @@
 // Load a URL into the main container
-function load(src, clear = true) {
+function load(src) {
     fetch(src + '.html', {
         // Only use cache if developing locally
         cache: window.location.hostname === 'localhost' ? 'no-store' : 'default'
     }).then(res => res.text()).then(body => {
-        // Usually clean out the main container, sometimes we might need to load multiple pages consecutively
-        if (clear) $('#container').empty();
-        $('#container').append($(body));
-
         // Save path and theme (sometimes)
         var s = { path: src };
         if (forceTheme) s.theme = forceTheme;
+
+        // Put the HTML
+        inject(body);
 
         // Put them in window.location
         var url = URI(window.location.href);
         url.search(s);
         window.history.pushState(s, 'Robot X', url.toString());
     });
+}
+
+function inject(html, clear = true) {
+    // Usually clean out the main container, sometimes we might need to load multiple pages consecutively
+    if (clear) $('#container').empty();
+    $('#container').append($(html));
 }
 
 // Round out the bottom of the second to last item in the navbar so the donate button looks byootiful
