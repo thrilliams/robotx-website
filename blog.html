@@ -7,7 +7,12 @@
     <script>window.blogs.then(blogs => {
         inject('')
         blogs.forEach((blog, i) => {
-            inject(`<div class="jumbotron">${i === 0 ? '<br><br><br>' : ''}${blog.body}</div>`, false)
+            inject(`<div class="jumbotron">
+                ${i === 0 ? '<br><br><br>' : ''}
+                <h3>${blog.title}</h3>
+                <p class="text-muted">${blog.sticky ? '<i class="fas fa-thumbtack"></i>   ' : ''}${new Date(blog.date).toDateString()}</p>
+                ${blog.body}
+            </div>`, false)
         })
     })</script>
 </div>
