@@ -1,6 +1,5 @@
-window.blogs = fetch('/get-blog-entries')
-    .then(res => res.text())
-    .then(body => JSON.parse(body))
+window.blogs = fetch('/get-blogs')
+    .then(res => res.json())
 
 function loadBlogs(b) {
     inject('')
