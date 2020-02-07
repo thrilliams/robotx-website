@@ -1,7 +1,7 @@
 {
   "name": "robotx",
   "version": "0.0.0",
-  "main": "src/index.ts",
+  "main": "index.ts",
   "description": "FRC team RobotX's website and management tools",
   "dependencies": {
     "gulp": "^4.0.2",
