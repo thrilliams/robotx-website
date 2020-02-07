@@ -11,6 +11,9 @@ function load(src) {
         // Put the HTML
         inject(body);
 
+        // Round out in-page images
+        $('#container').find('img').css('border-radius', '5px');
+
         // Put them in window.location
         var url = URI(window.location.href);
         url.search(s);
