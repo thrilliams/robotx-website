@@ -1,8 +1,12 @@
+// This starts loading blogs as soon as the website is loaded
 window.blogs = fetch('/get-blogs')
     .then(res => res.json())
 
 function loadBlogs(b) {
+    // Clear the container
     inject('')
+
+    // Format the blogs as byootiful HTML
     b.forEach((blog, i) => {
         let html = `<div class="jumbotron">
             ${i === 0 ? '<br><br><br>' : ''}
@@ -12,10 +16,12 @@ function loadBlogs(b) {
             ${blog.authors && blog.authors.length > 0 ? `<p class="text-muted">Written by ${blog.authors.join(', ')}</p>` : ''}
             ${blog.editors && blog.editors.length > 0 ? `<p class="text-muted">Edited by ${blog.editors.join(', ')}</p>` : ''}
         </div>`;
+
         html = $(html);
-        console.log(html.find('img'));
+        // This prettifies the embedded images so they aren't ugly
         html.find('img').addClass('img-fluid');
         html.find('img').css('border-radius', '5px');
+
         inject(html, false);
     })
 }
