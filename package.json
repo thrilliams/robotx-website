@@ -1,38 +1,24 @@
 {
   "name": "robotx",
   "version": "0.0.0",
-  "main": "index.ts",
   "description": "FRC team RobotX's website and management tools",
   "dependencies": {
     "del": "^5.1.0",
+    "firebase-admin": "^8.9.2",
     "firebase-tools": "^7.12.1",
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
     "gulp-pug": "^4.0.1",
     "gulp-rename": "^2.0.0",
     "gulp-sourcemaps": "^2.6.5",
-    "gulp-terser": "^1.2.0",
-    "ts-node": "^8.6.1",
-    "tslib": "^1.10.0",
-    "typescript": "^3.7.4"
+    "gulp-terser": "^1.2.0"
   },
   "scripts": {
-    "start": "npx ts-node index.ts",
     "build": "npx gulp",
     "watch": "npx gulp watchFiles",
     "deploy": "npx gulp deploy"
   },
   "keywords": [],
   "author": "Soren Williams",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/gulp": "^4.0.6",
-    "@types/gulp-concat": "0.0.32",
-    "@types/gulp-rename": "0.0.33",
-    "@types/gulp-rev": "^5.0.31",
-    "@types/gulp-sourcemaps": "0.0.32",
-    "@types/gulp-terser": "^1.2.0",
-    "@types/node": "^13.7.0",
-    "@types/pug": "^2.0.4"
-  }
+  "license": "ISC"
 }
