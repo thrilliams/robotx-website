@@ -40,10 +40,10 @@ async function render() {
 }
 
 function js() {
-    return src('src/assets/*.js') // Bundle and minify all JS at site root
+    return src('src/assets/*.js')
         .pipe(sourcemaps.init())
         .pipe(concat('bundle.js'))
-        .pipe(src(['src/assets/**/*.js', '!src/assets/*.js']))
+        // .pipe(src(['src/assets/**/*.js', '!src/assets/*.js']))
         .pipe(terser())
         .pipe(rev())
         .pipe(sourcemaps.write('.'))
@@ -56,7 +56,7 @@ function css() {
     return src('src/assets/*.css')
         .pipe(sourcemaps.init())
         .pipe(concat('stylesheet.css'))
-        .pipe(src(['src/assets/**/*.css', '!src/assets/*.css']))
+        // .pipe(src(['src/assets/**/*.css', '!src/assets/*.css']))
         .pipe(cleanCSS())
         .pipe(rev())
         .pipe(sourcemaps.write('.'))
@@ -70,10 +70,7 @@ function rewrite() {
 
     return src('build/**/*.html')
         .pipe(revRewrite({ manifest }))
-        .pipe(dest('build'))
-        .on('end', _ => {
-            del([ 'build/rev-manifest.json' ])
-        });
+        .pipe(dest('build'));
 }
 
 const build = series(clean, js, css, render, rewrite);
