@@ -7,6 +7,7 @@
     "firebase-admin": "^8.9.2",
     "firebase-tools": "^7.12.1",
     "gulp": "^4.0.2",
+    "gulp-clean-css": "^4.2.0",
     "gulp-concat": "^2.6.1",
     "gulp-pug": "^4.0.1",
     "gulp-rename": "^2.0.0",

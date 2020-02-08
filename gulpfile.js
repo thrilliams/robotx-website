@@ -1,6 +1,7 @@
 const { series, parallel, watch, src, dest } = require('gulp');
 const revRewrite = require('gulp-rev-rewrite');
 const sourcemaps = require('gulp-sourcemaps');
+const cleanCSS = require('gulp-clean-css');
 const terser = require('gulp-terser');
 const concat = require('gulp-concat');
 const rename = require('gulp-rename');
@@ -13,8 +14,10 @@ const admin = require('firebase-admin');
 
 function clean() {
     return del([
-        'build/*.js',
-        'build/*.css'
+        'build/**/*.js',
+        'build/**/*.js.map',
+        'build/**/*.css',
+        'build/**/*.css.map'
     ]);
 }
 
@@ -40,11 +43,12 @@ function js() {
     return src('src/assets/*.js') // Bundle and minify all JS at site root
         .pipe(sourcemaps.init())
         .pipe(concat('bundle.js'))
+        .pipe(src(['src/assets/**/*.js', '!src/assets/*.js']))
         .pipe(terser())
-        .pipe(sourcemaps.write())
         .pipe(rev())
+        .pipe(sourcemaps.write('.'))
         .pipe(dest('build'))
-        .pipe(rev.manifest())
+        .pipe(rev.manifest('build/rev-manifest.json', { base: process.cwd() + '/build', merge: true }))
         .pipe(dest('build'));
 }
 
@@ -52,23 +56,27 @@ function css() {
     return src('src/assets/*.css')
         .pipe(sourcemaps.init())
         .pipe(concat('stylesheet.css'))
-        // TODO: Find a minifier that works good
-        .pipe(sourcemaps.write())
+        .pipe(src(['src/assets/**/*.css', '!src/assets/*.css']))
+        .pipe(cleanCSS())
         .pipe(rev())
+        .pipe(sourcemaps.write('.'))
         .pipe(dest('build'))
-        .pipe(rev.manifest())
+        .pipe(rev.manifest('build/rev-manifest.json', { base: process.cwd() + '/build', merge: true }))
         .pipe(dest('build'));
 }
 
 function rewrite() {
-    const manifest = src('build/rev-manifest.json')
+    const manifest = src('build/rev-manifest.json');
 
     return src('build/**/*.html')
         .pipe(revRewrite({ manifest }))
-        .pipe(dest('build'));
+        .pipe(dest('build'))
+        .on('end', _ => {
+            del([ 'build/rev-manifest.json' ])
+        });
 }
 
-const build = series(clean, parallel(js, css, render), rewrite);
+const build = series(clean, js, css, render, rewrite);
 
 function deploy() {
     return exec('npx firebase-tools deploy --only hosting', (err, stdout, stderr) => {
