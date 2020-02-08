@@ -15,13 +15,13 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
       - name: Archive Production Artifact
         uses: actions/upload-artifact@master
         with:
           name: build
           path: build
-        env:
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
   deploy:
     name: Deploy
     needs: build
