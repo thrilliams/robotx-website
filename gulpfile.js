@@ -8,15 +8,13 @@ const rename = require('gulp-rename');
 const pug = require('gulp-pug');
 const del = require('del');
 
-console.log(process.env)
-
-admin.initializeApp({
+const app = admin.initializeApp({
     databaseURL: 'https://gulp-test.firebaseio.com/',
     // credential: admin.credential.applicationDefault()
     credential: admin.credential.cert(JSON.parse(Buffer.from(process.env.GCP_SA_KEY, 'base64').toString('ascii')))
 });
 
-let db = admin.database();
+const db = admin.database();
 
 function clean() {
     return del([
@@ -32,7 +30,8 @@ async function render() {
             locals: (await db.ref('/').once('value')).toJSON()
         }))
         .pipe(rename({ extname: '.html' }))
-        .pipe(dest('build'));
+        .pipe(dest('build'))
+        .on('end', _ => app.delete());
 }
 
 function js() {
