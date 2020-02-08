@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build": "npx gulp",
-    "watch": "npx gulp watchFiles",
+    "watch": "npx gulp watch",
     "deploy": "npx gulp deploy"
   },
   "keywords": [],

@@ -1,8 +1,6 @@
 const { series, parallel, watch, src, dest } = require('gulp');
 const revRewrite = require('gulp-rev-rewrite');
 const sourcemaps = require('gulp-sourcemaps');
-const { exec } = require('child_process');
-const admin = require('firebase-admin');
 const terser = require('gulp-terser');
 const concat = require('gulp-concat');
 const rename = require('gulp-rename');
@@ -10,13 +8,8 @@ const rev = require('gulp-rev');
 const pug = require('gulp-pug');
 const del = require('del');
 
-
-const app = admin.initializeApp({
-    databaseURL: 'https://gulp-test.firebaseio.com/',
-    credential: admin.credential.cert(JSON.parse(Buffer.from(process.env.GCP_SA_KEY, 'base64').toString('ascii')))
-});
-
-const db = admin.database();
+const { exec } = require('child_process');
+const admin = require('firebase-admin');
 
 function clean() {
     return del([
@@ -26,6 +19,13 @@ function clean() {
 }
 
 async function render() {
+    let app = admin.initializeApp({
+        databaseURL: 'https://gulp-test.firebaseio.com/',
+        credential: admin.credential.cert(JSON.parse(Buffer.from(process.env.GCP_SA_KEY, 'base64').toString('ascii')))
+    }, Math.random().toString());
+
+    let db = app.database();
+
     return src('src/pages/**/*.pug')
         .pipe(pug({
             basedir: 'src',
@@ -78,8 +78,24 @@ function deploy() {
     });
 }
 
+function watchFiles() {
+    return watch('src/**/*', build);
+}
+
+function watchDB() {
+    let app = admin.initializeApp({
+        databaseURL: 'https://gulp-test.firebaseio.com/',
+        credential: admin.credential.cert(JSON.parse(Buffer.from(process.env.GCP_SA_KEY, 'base64').toString('ascii')))
+    }, Math.random().toString());
+
+    let db = app.database();
+
+    db.ref('/').on('value', build);
+}
+
 module.exports.render = render;
 module.exports.default = build;
 module.exports.deploy = deploy;
-module.exports.buildAndDeploy = series(build, deploy);
-module.exports.watchFiles = series(build, _ => watch('src/**/*', build));
+module.exports.watchFiles = watchFiles;
+module.exports.watchDB = watchDB;
+module.exports.watch = parallel(watchDB, watchFiles);
