@@ -20,6 +20,8 @@ jobs:
         with:
           name: build
           path: build
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
   deploy:
     name: Deploy
     needs: build
