@@ -6,6 +6,7 @@ const admin = require('firebase-admin');
 const terser = require('gulp-terser');
 const concat = require('gulp-concat');
 const rename = require('gulp-rename');
+const rev = require('gulp-rev');
 const pug = require('gulp-pug');
 const del = require('del');
 
