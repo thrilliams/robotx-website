@@ -8,7 +8,7 @@ const rename = require('gulp-rename');
 const pug = require('gulp-pug');
 const del = require('del');
 
-// console.log(new Buffer(process.env.GCP_SA_KEY, 'base64').toString('ascii'))
+console.log(process.env.GCP_SA_KEY)
 
 admin.initializeApp({
     databaseURL: 'https://gulp-test.firebaseio.com/',
