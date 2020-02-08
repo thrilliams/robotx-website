@@ -8,12 +8,12 @@ const rename = require('gulp-rename');
 const pug = require('gulp-pug');
 const del = require('del');
 
-console.log(admin.credential.applicationDefault())
+// console.log(new Buffer(process.env.GCP_SA_KEY, 'base64').toString('ascii'))
 
 admin.initializeApp({
     databaseURL: 'https://gulp-test.firebaseio.com/',
-    credential: admin.credential.applicationDefault()
-    // credential: admin.credential.cert(require('/Users/soren/Desktop/robotx-rewrite/secret.json'))
+    // credential: admin.credential.applicationDefault()
+    credential: admin.credential.cert(JSON.parse(Buffer.from(process.env.GCP_SA_KEY, 'base64').toString('ascii')))
 });
 
 let db = admin.database();
