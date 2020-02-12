@@ -1,5 +1,6 @@
 const { series, parallel, watch, src, dest } = require('gulp');
 const revRewrite = require('gulp-rev-rewrite');
+const recursive = require('recursive-readdir');
 const sourcemaps = require('gulp-sourcemaps');
 const cleanCSS = require('gulp-clean-css');
 const admin = require('firebase-admin');
@@ -72,7 +73,7 @@ function rewrite() {
         .pipe(revRewrite({ manifest }))
         .pipe(dest('build'))
         .on('end', _ => {
-            console.log(fs.readFileSync('build/index.html', 'utf8'));
+            recursive('build', console.log)
         });
      
 }
