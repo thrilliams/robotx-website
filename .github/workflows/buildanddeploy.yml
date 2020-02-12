@@ -13,16 +13,7 @@ jobs:
         uses: actions/checkout@master
       - name: Install Dependencies
         run: npm install
-      - name: Build
-        run: npm run build
-        env:
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-      - name: Archive Production Artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: build
-          path: build
-      - name: Deploy to Firebase
-        run: npm run deploy
+      - name: Build and Deploy
+        run: npx gulp buildAndDeploy
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
