@@ -2,15 +2,13 @@ const { series, parallel, watch, src, dest } = require('gulp');
 const revRewrite = require('gulp-rev-rewrite');
 const sourcemaps = require('gulp-sourcemaps');
 const cleanCSS = require('gulp-clean-css');
+const admin = require('firebase-admin');
 const terser = require('gulp-terser');
 const concat = require('gulp-concat');
 const rename = require('gulp-rename');
 const rev = require('gulp-rev');
 const pug = require('gulp-pug');
 const del = require('del');
-
-const { exec } = require('child_process');
-const admin = require('firebase-admin');
 
 function clean() {
     return del([
