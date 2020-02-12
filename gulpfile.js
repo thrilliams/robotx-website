@@ -10,6 +10,7 @@ const deploy = require('./deploy');
 const rev = require('gulp-rev');
 const pug = require('gulp-pug');
 const del = require('del');
+const fs = require('fs');
 
 function clean() {
     return del([
@@ -69,7 +70,11 @@ function rewrite() {
 
     return src('build/**/*.html')
         .pipe(revRewrite({ manifest }))
-        .pipe(dest('build'));
+        .pipe(dest('build'))
+        .on('end', _ => {
+            console.log(fs.readFileSync('build/index.html', 'utf8'));
+        });
+     
 }
 
 const build = series(clean, js, css, render, rewrite);

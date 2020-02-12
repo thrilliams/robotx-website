@@ -162,8 +162,6 @@ async function upload(site, path, forced, cb) {
         requests.push(request);
     });
 
-    // console.log(typeof requests[0]);
-
     await Promise.all(requests);
     if (bar) bar.stop();
 
