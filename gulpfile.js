@@ -73,7 +73,7 @@ function rewrite() {
         .pipe(revRewrite({ manifest }))
         .pipe(dest('build'))
         .on('end', _ => {
-            recursive('build', console.log)
+            console.log(fs.readFileSync('build/rev-manifest.json', 'utf8'));
         });
      
 }
