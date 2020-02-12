@@ -6,6 +6,7 @@ const admin = require('firebase-admin');
 const terser = require('gulp-terser');
 const concat = require('gulp-concat');
 const rename = require('gulp-rename');
+const deploy = require('./deploy');
 const rev = require('gulp-rev');
 const pug = require('gulp-pug');
 const del = require('del');
@@ -73,12 +74,8 @@ function rewrite() {
 
 const build = series(clean, js, css, render, rewrite);
 
-function deploy() {
-    return exec('npx firebase-tools deploy --only hosting', (err, stdout, stderr) => {
-        if (err)
-            console.log(err);
-        console.log(stdout, stderr);
-    });
+function deploySite(cb) {
+    deploy('gulp-test', 'build', false, cb);
 }
 
 function watchFiles() {
@@ -98,7 +95,8 @@ function watchDB() {
 
 module.exports.render = render;
 module.exports.default = build;
-module.exports.deploy = deploy;
+module.exports.deploy = deploySite;
+module.exports.buildAndDeploy = series(build, deploySite);
 module.exports.watchFiles = watchFiles;
 module.exports.watchDB = watchDB;
 module.exports.watch = parallel(watchDB, watchFiles);

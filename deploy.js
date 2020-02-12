@@ -117,7 +117,7 @@ async function createRelease(site, version) {
     return await request.json();
 }
 
-async function upload(site, path, forced) {
+async function upload(site, path, forced, cb) {
     let { name } = await createVersion(site, {
         headers: [{
             glob: '**',
@@ -136,7 +136,7 @@ async function upload(site, path, forced) {
     let bar = undefined;
     if (uploadRequiredHashes.length > 0) {
         bar = new progress.SingleBar({
-            format: 'Upload progress [{bar}] {percentage}% || {value}/{total} Files',
+            format: 'Upload progress: [{bar}] {percentage}% || {value}/{total} Files',
             barCompleteChar: '\u2588',
             barIncompleteChar: '\u2591',
             hideCursor: true
@@ -145,7 +145,9 @@ async function upload(site, path, forced) {
         bar.start(uploadRequiredHashes.length, 0);
     }
 
-    uploadRequiredHashes.map(e => {
+    let requests = [];
+
+    uploadRequiredHashes.forEach(e => {
         let request = fetchAuth(
             `${uploadUrl}/${e}`,
             'POST',
@@ -157,24 +159,19 @@ async function upload(site, path, forced) {
             if (bar) bar.increment();
         });
         
-        return request;
+        requests.push(request);
     });
 
-    await Promise.resolve(uploadRequiredHashes).then(async _ => {
-        setTimeout(async _ => {
-            if (bar) {
-                bar.stop();
-                console.log('\n');
-            };
+    // console.log(typeof requests[0]);
 
-            await updateStatus(name, 'FINALIZED');
-            await createRelease(site, name);
+    await Promise.all(requests);
+    if (bar) bar.stop();
 
-            console.log(`Released successfully!\nhttps://${site}.web.app/`);
-        }, 2500);
-    });
+    await updateStatus(name, 'FINALIZED');
+    await createRelease(site, name);
+
+    console.log(`${bar ? '\n' : ''}Released successfully!\nhttps://${site}.web.app/`);
+    if (cb) cb();
 }
-
-upload('gulp-test', 'build', false);
 
 module.exports = upload;

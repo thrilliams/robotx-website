@@ -34,8 +34,6 @@ jobs:
         with:
           name: build
       - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only hosting --project gulp-test
+        run: npm run deploy
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
