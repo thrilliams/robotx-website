@@ -1,17 +1,19 @@
 const { series, parallel, watch, src, dest } = require('gulp');
 const revRewrite = require('gulp-rev-rewrite');
-const recursive = require('recursive-readdir');
 const sourcemaps = require('gulp-sourcemaps');
 const cleanCSS = require('gulp-clean-css');
+const imagemin = require('gulp-imagemin');
 const admin = require('firebase-admin');
 const terser = require('gulp-terser');
 const concat = require('gulp-concat');
 const rename = require('gulp-rename');
 const deploy = require('./deploy');
+const sass = require('gulp-sass');
 const rev = require('gulp-rev');
 const pug = require('gulp-pug');
 const del = require('del');
-const fs = require('fs');
+
+let secret = require('./secret.json');
 
 function clean() {
     return del([
@@ -25,7 +27,7 @@ function clean() {
 async function render() {
     let app = admin.initializeApp({
         databaseURL: 'https://gulp-test.firebaseio.com/',
-        credential: admin.credential.cert(JSON.parse(Buffer.from(process.env.GCP_SA_KEY, 'base64').toString('ascii')))
+        credential: admin.credential.cert(secret)
     }, Math.random().toString());
 
     let db = app.database();
@@ -54,8 +56,9 @@ function js() {
 }
 
 function css() {
-    return src('src/assets/*.css')
+    return src('src/assets/*.scss')
         .pipe(sourcemaps.init())
+        .pipe(sass().on('error', sass.logError))
         .pipe(concat('stylesheet.css'))
         // .pipe(src(['src/assets/**/*.css', '!src/assets/*.css']))
         .pipe(cleanCSS())
@@ -63,6 +66,12 @@ function css() {
         .pipe(sourcemaps.write('.'))
         .pipe(dest('build'))
         .pipe(rev.manifest('build/rev-manifest.json', { base: process.cwd() + '/build', merge: true }))
+        .pipe(dest('build'));
+}
+
+function images() {
+    return src('src/assets/images/*')
+        .pipe(imagemin())
         .pipe(dest('build'));
 }
 
@@ -75,7 +84,7 @@ function rewrite() {
      
 }
 
-const build = series(clean, js, css, render, rewrite);
+const build = series(clean, js, css, render, rewrite, images);
 
 function deploySite(cb) {
     deploy('gulp-test', 'build', false, cb);
@@ -88,7 +97,7 @@ function watchFiles() {
 function watchDB() {
     let app = admin.initializeApp({
         databaseURL: 'https://gulp-test.firebaseio.com/',
-        credential: admin.credential.cert(JSON.parse(Buffer.from(process.env.GCP_SA_KEY, 'base64').toString('ascii')))
+        credential: admin.credential.cert(secret)
     }, Math.random().toString());
 
     let db = app.database();

@@ -6,7 +6,7 @@ const crypto = require('crypto');
 const zlib = require('zlib');
 const fs = require('fs');
 
-let secret = JSON.parse(Buffer.from(process.env.GCP_SA_KEY, 'base64').toString('ascii'));
+let secret = require('./secret.json');
 
 function getAccessToken() {
     return new Promise((resolve, reject) => {
