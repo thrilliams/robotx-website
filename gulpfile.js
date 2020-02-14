@@ -1,4 +1,5 @@
 const { series, parallel, watch, src, dest } = require('gulp');
+const { replace } = require('gulp-inject-string');
 const revRewrite = require('gulp-rev-rewrite');
 const sourcemaps = require('gulp-sourcemaps');
 const cleanCSS = require('gulp-clean-css');
@@ -7,11 +8,13 @@ const admin = require('firebase-admin');
 const terser = require('gulp-terser');
 const concat = require('gulp-concat');
 const rename = require('gulp-rename');
+const through = require('through2');
 const deploy = require('./deploy');
 const sass = require('gulp-sass');
 const rev = require('gulp-rev');
 const pug = require('gulp-pug');
 const del = require('del');
+const fs = require('fs');
 
 let secret = require('./secret.json');
 
@@ -46,12 +49,11 @@ function js() {
     return src('src/assets/*.js')
         .pipe(sourcemaps.init())
         .pipe(concat('bundle.js'))
-        // .pipe(src(['src/assets/**/*.js', '!src/assets/*.js']))
         .pipe(terser())
-        .pipe(rev())
+        // .pipe(rev())
         .pipe(sourcemaps.write('.'))
-        .pipe(dest('build'))
-        .pipe(rev.manifest('build/rev-manifest.json', { base: process.cwd() + '/build', merge: true }))
+        // .pipe(dest('build'))
+        // .pipe(rev.manifest('build/rev-manifest.json', { base: process.cwd() + '/build', merge: true }))
         .pipe(dest('build'));
 }
 
@@ -60,12 +62,11 @@ function css() {
         .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
         .pipe(concat('stylesheet.css'))
-        // .pipe(src(['src/assets/**/*.css', '!src/assets/*.css']))
         .pipe(cleanCSS())
-        .pipe(rev())
+        // .pipe(rev())
         .pipe(sourcemaps.write('.'))
-        .pipe(dest('build'))
-        .pipe(rev.manifest('build/rev-manifest.json', { base: process.cwd() + '/build', merge: true }))
+        // .pipe(dest('build'))
+        // .pipe(rev.manifest('build/rev-manifest.json', { base: process.cwd() + '/build', merge: true }))
         .pipe(dest('build'));
 }
 
@@ -80,11 +81,18 @@ function rewrite() {
 
     return src('build/**/*.html')
         .pipe(revRewrite({ manifest }))
+        .pipe(through.obj((file, enc, cb) => {
+            if ((file.isBuffer() || file.isStream()) && file.contents.length == 0) {
+                console.log(file.path + ' is empty');
+                cb(null, file);
+                return;
+            }
+            cb(null, file);
+        }))
         .pipe(dest('build'));
-     
 }
 
-const build = series(clean, js, css, render, rewrite, images);
+const build = parallel(series(clean, parallel(js, css, render)/* , rewrite */), images);
 
 function deploySite(cb) {
     deploy('gulp-test', 'build', false, cb);

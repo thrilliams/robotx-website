@@ -1,9 +1,22 @@
+mixin blog(post)
+    div.blog.jumbotron
+        h1= post.title
+        p.muted= new Date(post.date).toDateString()
+        p!= post.body
+
 doctype html
 html
     include /includes/head.pug
     body
         include /includes/navbar.pug
         div#content
-            p Body text?
-            p #{JSON.stringify(blogs)}
+            -
+                blogs = Object.values(blogs).sort((a, b) => {
+                    let stickiness = (b.priority || 0) - (a.priority || 0);
+                    if (stickiness === 0)
+                        stickiness = b.date - a.date;
+                    return stickiness;
+                })
+            each post in blogs
+                +blog(post)
         include /includes/foot.pug

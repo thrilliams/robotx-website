@@ -26,6 +26,15 @@ body {
     grid-template-rows: $nav-height auto $nav-height;
 }
 
+p.muted {
+    color: $c-2;
+    font-size: 14px;
+}
+
+p.lead {
+    font-size: 18px;
+}
+
 #navbar {
     display: grid;
     column-gap: 10px;
@@ -51,57 +60,70 @@ body {
     ul {
         margin: 0;
         padding: 0;
-        display: grid;
-        grid-auto-flow: column;
-        grid-auto-columns: 1fr;
+        display: flex;
+        flex-direction: row;
 
         @media screen and (max-width: $tablet-width) {
             display: none;
         }
-    }
 
-    ul li {
-        // Center align button
-        display: grid;
-        height: 100%;
-
-        a {
-            margin: 15px;
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 5px;
-            border: 1px solid;
-            border-color: $c-03;
-            text-decoration: none;
-            color: $c-1;
-        }
-
-        a:hover {
-            background-color: $c-03;
+        li {
+            // Center align button
+            display: grid;
+            height: 100%;
+            flex-grow: 1;
+    
+            a {
+                margin: 15px;
+                padding: 15px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 5px;
+                border: 1px solid;
+                border-color: $c-03;
+                text-decoration: none;
+                color: $c-1;
+            }
+    
+            a:hover {
+                background-color: $c-03;
+            }
         }
     }
 }
 
 #content {
-    margin: 30px;
-    padding: 30px;
-    background-color: $c-02;
-    border-radius: 5px;
-    overflow-y: scroll;
+    overflow-y: auto;
 
-    p {
+    .blog {
+        p {
+            margin-bottom: 15px;
+        }
+
+        p:last-child {
+            margin-bottom: 0px;
+        }
+    }
+
+    .container {
+        margin: 60px;
+    }
+
+    .jumbotron {
+        margin: 30px;
+        padding: 30px;
+        background-color: $c-02;
+        border-radius: 5px;
+    }
+
+    h1, h2, h3, h4, h5, h6, p {
         margin: 0;
     }
 }
 
 #footer {
-    color: $c-2;
     background-color: $c-02;
-
-    // border-top: 1px solid;
-    // border-color: $c-03;
 
     display: flex;
     flex-direction: column;
@@ -117,7 +139,7 @@ body {
         a {
             margin: 5px;
             text-decoration: none;
-            font-size: 30px;
+            font-size: 40px;
             color: #598ede;
         }
 

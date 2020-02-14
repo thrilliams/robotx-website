@@ -122,7 +122,7 @@ async function upload(site, path, forced, cb) {
         headers: [{
             glob: '**',
             headers: {
-                'Cache-Control': 'max-age=86400'
+                'Cache-Control': 'max-age=360'
             }
         }]
     });
