@@ -1,8 +1,17 @@
-mixin blog(post)
+mixin blog(post, i)
     div.blog.jumbotron
         h1= post.title
         p.muted= new Date(post.date).toDateString()
-        p!= post.body
+        != post.body
+        if post.images > 0
+            ul.image-container
+                each _, j in Array(post.images)
+                    li
+                        img(src=`/blog/${blogs.length - i}/${j}.jpg`)
+        if post.authors && Object.values(post.authors).length > 0
+            p.muted= 'Written by ' + Object.values(post.authors).join(', ')
+        if post.editors && Object.values(post.editors).length > 0
+            p.muted= 'Edited by ' + Object.values(post.editors).join(', ')
 
 doctype html
 html
@@ -17,6 +26,6 @@ html
                         stickiness = b.date - a.date;
                     return stickiness;
                 })
-            each post in blogs
-                +blog(post)
+            each post, i in blogs
+                +blog(post, i)
         include /includes/foot.pug

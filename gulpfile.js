@@ -2,6 +2,7 @@ const { series, parallel, watch, src, dest } = require('gulp');
 const { replace } = require('gulp-inject-string');
 const revRewrite = require('gulp-rev-rewrite');
 const sourcemaps = require('gulp-sourcemaps');
+const responsive = require('gulp-responsive');
 const cleanCSS = require('gulp-clean-css');
 const imagemin = require('gulp-imagemin');
 const admin = require('firebase-admin');
@@ -71,12 +72,22 @@ function css() {
 }
 
 function images() {
-    return src('src/assets/images/*')
+    return src('src/assets/images/**/*')
+        .pipe(responsive({
+            'blog/**/*': [{ width: 720 }],
+            'brand/icon.png': [{ width: 360 }],
+            // 'team/**/*': [{ width: 720 }],
+            // 'team/*': [{ width: 1440 }]
+        }))
         .pipe(imagemin())
         .pipe(dest('build'));
 }
 
 function rewrite() {
+    /*
+    Rev hashing so file updates are received immediately by the client with thick, luscious
+    cache times. However, the library is prone to deleting files, so I turned it off.
+    */
     const manifest = src('build/rev-manifest.json');
 
     return src('build/**/*.html')
