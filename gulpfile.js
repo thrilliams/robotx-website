@@ -83,9 +83,9 @@ function images() {
         .pipe(dest('build'));
 }
 
-function favicon() {
-    return src('src/assets/images/favicon/**/*')
-        .pipe(dest('build/favicon'));
+function static() {
+    return src('src/assets/static/**/*')
+        .pipe(dest('build'));
 }
 
 function rewrite() {
@@ -108,7 +108,7 @@ function rewrite() {
         .pipe(dest('build'));
 }
 
-const build = parallel(series(clean, parallel(js, css, render)/* , rewrite */), images, favicon);
+const build = parallel(series(clean, parallel(js, css, render)/* , rewrite */), images, static);
 
 function deploySite(cb) {
     deploy('gulp-test', 'build', false, cb);
